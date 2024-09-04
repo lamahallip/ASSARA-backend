@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="00000000000000-seq" author="lamahallip">
+        <createSequence sequenceName="product_generator" startValue="1" incrementBy="1"/>
+    </changeSet>
+    <changeSet id="00000000000000" author="lamahallip">
+        <createTable tableName="product">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="public_id" type="${uuidType}">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="title" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(65535)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="00000000000001" author="lamahallip">
+        <createTable tableName="product_content">
+            <column name="product_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="image" type="${blobType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image_content_type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="00000000000002-seq" author="lamahallip">
+        <createSequence sequenceName="user_generator" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="00000000000002" author="lamahallip">
+        <createTable tableName="assara_user">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="first_name" type="varchar(50)"/>
+            <column name="last_name" type="varchar(50)"/>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_user_email"/>
+            </column>
+            <column name="image_avatar" type="varchar(256)"/>
+            <column name="subscription" type="varchar(256)"/>
+            <column name="created_date" type="timestamp"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="00000000000003" author="lamahallip">
+        <createTable tableName="favorite_product">
+            <column name="user_email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_public_id" type="${uuidType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="favorite_product" columnNames="user_email, product_public_id" constraintName="pk_user_products"/>
+        <createIndex indexName="IX_favorite_productPK" tableName="favorite_product" unique="true">
+            <column name="product_public_id"/>
+            <column name="user_email"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="product_public_id"
+                                 validate="true"
+                                 baseTableName="favorite_product"
+                                 constraintName="fk_favorite_product_id"
+                                 initiallyDeferred="false"
+                                 deferrable="false"
+                                 referencedColumnNames="public_id"
+                                 referencedTableName="product"/>
+    </changeSet>
+</databaseChangeLog>
