@@ -25,9 +25,9 @@ public class AuthResource {
     private final UserService userService;
     private final ClientRegistration clientRegistration;
 
-    public AuthResource(UserService userService, ClientRegistrationRepository clientRegistration) {
+    public AuthResource(UserService userService, ClientRegistrationRepository clientRegistrations) {
         this.userService = userService;
-        this.clientRegistration = clientRegistration.findByRegistrationId("okta");
+        this.clientRegistration = clientRegistrations.findByRegistrationId("okta");
     }
 
     // Method to get and read info User from Authentication
@@ -48,7 +48,7 @@ public class AuthResource {
         String originUrl = request.getHeader(HttpHeaders.ORIGIN);
         String issuerUri = clientRegistration.getProviderDetails().getIssuerUri();
         Object[] params = { originUrl, issuerUri, clientRegistration.getClientId() };
-        String logoutUrl = MessageFormat.format("{0}v2/logout?clientId={1}&returnTo={2}", params);
+        String logoutUrl = MessageFormat.format("{0}v2/logout?client_id={1}&returnTo={2}", params);
         request.getSession().invalidate();
         return ResponseEntity.ok().body(Map.of("logoutUrl", logoutUrl));
     }

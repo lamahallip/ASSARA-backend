@@ -1,5 +1,7 @@
 package fr.assara.widgets.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 

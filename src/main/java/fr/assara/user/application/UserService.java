@@ -18,8 +18,8 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private UserMapper userMapper;
-    private UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     public UserService(UserMapper userMapper, UserRepository userRepository) {
         this.userMapper = userMapper;
@@ -38,9 +38,9 @@ public class UserService {
                 Instant dbLastModifiedDate = userExisting.orElseThrow().getLastModifiedDate();
                 Instant idpModifiedDate;
                 if(attributes.get("updated_at") instanceof Instant) {
-                    idpModifiedDate = (Instant) attributes.get("update_at");
+                    idpModifiedDate = (Instant) attributes.get("updated_at");
                 } else {
-                    idpModifiedDate = Instant.ofEpochSecond((Integer) attributes.get("update_at"));
+                    idpModifiedDate = Instant.ofEpochSecond((Integer) attributes.get("updated_at"));
                 }
                 if(idpModifiedDate.isAfter(dbLastModifiedDate)) {
                     updateUser(user);
@@ -52,7 +52,7 @@ public class UserService {
     }
 
     /**
-     * Method to transform authenticated User to readUserDTO
+     * Method to transform and get authenticated User to readUserDTO
      */
     public ReadUserDTO getUserAuthenticatedfromSecurityContext() {
         OAuth2User principal = (OAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

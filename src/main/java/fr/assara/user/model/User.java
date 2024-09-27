@@ -25,7 +25,8 @@ public class User extends AbstractAuditingEntity<Long> {
     @Column(name = "image_avatar")
     private String imageUrl;
 
-    @Column(name = "subbscription")
+    @Column(name = "subscription")
+    @Enumerated(EnumType.STRING)
     private Subscription subscription = Subscription.FREE ;
 
 
